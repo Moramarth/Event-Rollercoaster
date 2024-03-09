@@ -30,7 +30,7 @@ const array = ref(structuredClone(allEvents));
         </td>
         <td>{{ obj.ticketPrice }}</td>
         <td>
-          <router-link role="button" :to=" { name: 'event-details', params: { id: obj.eventId } }">
+          <router-link role="button" :to="{ name: 'event-details', params: { id: obj.eventId } }">
             Go to Details
           </router-link>
         </td>

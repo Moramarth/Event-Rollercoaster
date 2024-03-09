@@ -25,7 +25,7 @@ const array = ref(structuredClone(hallsArray));
         <td>{{ hall.seatCapacity }}</td>
         <td>{{ hall.description }}</td>
         <td>
-          <router-link role="button" :to=" { name: 'hall-details', params: { id: hall.id } }">
+          <router-link role="button" :to="{ name: 'hall-details', params: { id: hall.id } }">
             Go to Details
           </router-link>
         </td>

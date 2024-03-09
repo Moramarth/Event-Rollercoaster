@@ -13,7 +13,7 @@ onMounted(() => {
     () => route.params,
     () => {
       if (route.name === 'hall-details') {
-        hall.value = hallsArray.find(obj => obj.id = Number(route.params.id));
+        hall.value = hallsArray.find(obj => obj.id === Number(route.params.id));
         events.value = allEvents.filter(obj => obj.hallId === hall.value.id);
       }
     },
@@ -30,6 +30,9 @@ onMounted(() => {
     <p>{{ hall.name }}</p>
     <p>{{ hall.seatCapacity }}</p>
     <p>{{ hall.description }}</p>
+    <router-link role="button" :to=" { name: 'halls-list' }">
+      Back to Halls
+    </router-link>
   </article>
 
   <article v-for="obj in events" :key="obj.eventId">

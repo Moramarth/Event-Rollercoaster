@@ -1,30 +1,47 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import { mockDataEvents } from '../../../mockDataEvents';
+import { allEvents } from '../../../mockDataEvents';
 
 export const useCartStore = defineStore('cart', () => {
   const events = ref([]);
 
-  const getEvent = computed(() => eventId => events.value.find(obj => obj.id === eventId));
+  const getEvents = computed(() => events.value);
 
   function addToCart(selectedId) {
-    const eventInCart = events.value.find(object => object.id === selectedId);
+    const eventInCart = events.value.find(object => object.object.eventId === selectedId);
     if (!eventInCart) {
-        newEvent = mockDataEvents.find(object => object.id === selectedId)
-        events.value.push(newEvent);
+      const newEvent = allEvents.find(object => object.eventId === selectedId);
+      events.value.push({
+        object: structuredClone(newEvent),
+        numberOfTickets: 1,
+      });
     }
     else {
-      eventInCart.quantity += 1;
+      eventInCart.numberOfTickets += 1;
     }
-  };
+  }
 
+  function changeQuantity(objectId, event) {
+    const qty = Number(event.target.value) ?? 0;
+    const productInCart = events.value.find(object => object.object.eventId === objectId);
+    if (!productInCart)
+      return;
+
+    if (qty > 0) {
+      productInCart.numberOfTickets = qty;
+    }
+    else {
+      events.value = events.value.filter(object => object.object.eventId !== objectId);
+    }
+  }
   function clearCart() {
-    events.value = ref([])
+    events.value = [];
   }
   return {
     events,
-    getEvent,
+    getEvents,
     addToCart,
-    clearCart
-}
-})
+    changeQuantity,
+    clearCart,
+  };
+});
