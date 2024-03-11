@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useCartStore } from '../store/cartStore';
+import { generateTicket } from '../utils/generateTicket';
 
 const cartStore = useCartStore();
 const selectedEvents = computed(() => {
@@ -13,6 +14,22 @@ const totalSum = computed(() => {
   });
   return sum;
 });
+
+async function buyTickets() {
+  if (!localStorage.getItem('tickets')) {
+    localStorage.setItem('tickets', JSON.stringify([]));
+  }
+  const my_tickets = JSON.parse(localStorage.getItem('tickets'));
+
+  for (const event of cartStore.getEvents) {
+    for (let i = 0; i < event.numberOfTickets; i++) {
+      my_tickets.push(await generateTicket(event.object));
+    }
+  }
+
+  localStorage.setItem('tickets', JSON.stringify(my_tickets));
+  cartStore.clearCart();
+}
 </script>
 
 <template>
@@ -66,12 +83,20 @@ const totalSum = computed(() => {
         </tr>
       </tfoot>
     </table>
-    <button @click="cartStore.clearCart()">
-      Clear Cart
-    </button>
+    <div class="btn-container">
+      <button @click="buyTickets">
+        Buy Tickets
+      </button>
+      <button class="secondary" @click="cartStore.clearCart()">
+        Clear Cart
+      </button>
+    </div>
   </article>
 </template>
 
-<style lang="scss" scoped>
-
+<style scoped>
+.btn-container {
+  display: flex;
+  gap: 1rem
+}
 </style>
