@@ -3,7 +3,7 @@ import Button from 'primevue/button';
 </script>
 
 <template>
-  <div class="asd">
+  <div class="hero-section">
     <div>
       <h1>Embark on a journey of joy and celebration! Find the most delightful events with Event Rollercoaster.</h1>
       <router-link :to="{ name: 'halls-list' }">
@@ -18,7 +18,7 @@ import Button from 'primevue/button';
 </template>
 
 <style scoped>
-.asd {
+.hero-section {
   display: flex;
 }
 img {

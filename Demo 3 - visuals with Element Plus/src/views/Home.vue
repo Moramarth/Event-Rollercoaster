@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="asd">
+  <div class="hero-section">
     <div>
       <h1>Embark on a journey of joy and celebration! Find the most delightful events with Event Rollercoaster.</h1>
       <router-link :to="{ name: 'halls-list' }">
@@ -23,7 +23,7 @@
 h1 {
   font-size: 5rem;
 }
-.asd {
+.hero-section {
   display: flex;
 }
 img {

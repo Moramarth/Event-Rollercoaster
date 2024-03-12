@@ -4,7 +4,9 @@ import { useRoute } from 'vue-router';
 import Card from 'primevue/card';
 import Button from 'primevue/button';
 import { allEvents } from '../../../mockDataEvents';
+import { useCartStore } from '../store/cartStore';
 
+const cartStore = useCartStore();
 const object = ref({});
 const route = useRoute();
 
@@ -20,10 +22,6 @@ onMounted(() => {
     { immediate: true },
   );
 });
-
-function addToCart() {
-  // ToDO
-}
 </script>
 
 <template>
@@ -43,10 +41,10 @@ function addToCart() {
       <p>{{ object.featured?.join(', ') }}</p>
     </template>
     <template #footer>
-      <router-link :to=" { name: 'event-details', params: { id: object.eventId } }">
-        <Button label="Go to Details" />
+      <router-link :to=" { name: 'events-list' }">
+        <Button label="Back to Events" />
       </router-link>
-      <Button label="Get a ticket" @click="addToCart" />
+      <Button label="Get a ticket" @click="cartStore.addToCart(object.eventId)" />
     </template>
   </Card>
 </template>

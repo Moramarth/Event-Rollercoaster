@@ -41,8 +41,8 @@ onMounted(() => {
       {{ hall.description }}
     </template>
     <template #footer>
-      <router-link :to=" { name: 'hall-details', params: { id: hall.id } }">
-        <Button label="Go to Details" />
+      <router-link :to=" { name: 'halls-list' }">
+        <Button label="Back to Halls" />
       </router-link>
     </template>
   </Card>
