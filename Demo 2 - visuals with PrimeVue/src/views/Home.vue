@@ -1,27 +1,65 @@
 <script setup>
 import Button from 'primevue/button';
+import Carousel from 'primevue/carousel';
+import Card from 'primevue/card';
+import { onMounted, ref } from 'vue';
+import { getUpcomingEvents } from '../dataProviders/events';
+
+const array = ref([]);
+
+onMounted(async () => {
+  array.value = await getUpcomingEvents();
+});
 </script>
 
 <template>
-  <div class="hero-section">
-    <div>
-      <h1>Embark on a journey of joy and celebration! Find the most delightful events with Event Rollercoaster.</h1>
-      <router-link :to="{ name: 'halls-list' }">
-        <Button label="Discover the Magic" icon="pi pi-send" />
-      </router-link>
-    </div>
-    <img
-      src="https://blocks.primevue.org/images/blocks/hero/hero-1.png"
-      alt="Image"
-    >
-  </div>
+  <Carousel
+    :value="array"
+    :num-visible="1"
+    :num-scroll="1"
+    circular
+    :autoplay-interval="6000"
+  >
+    <template #item="slotProps">
+      <Card>
+        <template #header>
+          <img class="table-img" :src="slotProps.data.banerUrl" alt="banner">
+        </template>
+        <template #title>
+          {{ slotProps.data.name }}
+        </template>
+        <template #subtitle>
+          <p>{{ slotProps.data.ticketPrice }} BGN</p>
+          <p>Starts at {{ slotProps.data.startTime }}</p>
+        </template>
+        <template #content>
+          <h2 />
+          {{ slotProps.data.description }}
+        </template>
+        <template #footer>
+          <p>{{ slotProps.data.companyName }}</p>
+          <p>
+            <router-link :to=" { name: 'event-details', params: { id: slotProps.data.id } }">
+              <Button label="Details" />
+            </router-link>
+          </p>
+        </template>
+      </Card>
+    </template>
+  </Carousel>
 </template>
 
 <style scoped>
-.hero-section {
+.p-card {
   display: flex;
+  padding: 20px;
+  height: 500px;
+  font-size: 1.2rem;
 }
-img {
-  clip-path: polygon(8% 0, 100% 0%, 100% 100%, 0 100%)
+
+.table-img {
+ height: 100%;
+ width: auto;
+ border-radius: 1rem;
 }
 </style>

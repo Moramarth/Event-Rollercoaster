@@ -1,29 +1,32 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import { allEvents } from '../../../mockDataEvents';
+import { getEventById } from '../dataProviders/events';
 
 export const useCartStore = defineStore('cart', () => {
   const events = ref([]);
+  const activeBookings = ref([]);
 
   const getEvents = computed(() => events.value);
+  const getActiveBookings = computed(() => activeBookings.value);
 
-  function addToCart(selectedId) {
-    const eventInCart = events.value.find(object => object.object.eventId === selectedId);
+  async function addToCart(selectedId, numberOfTickets, ticketsleft) {
+    const eventInCart = events.value.find(object => object.object.id === selectedId);
     if (!eventInCart) {
-      const newEvent = allEvents.find(object => object.eventId === selectedId);
+      const newEvent = await getEventById(selectedId);
       events.value.push({
         object: structuredClone(newEvent),
-        numberOfTickets: 1,
+        numberOfTickets,
+        ticketsleft,
       });
     }
     else {
-      eventInCart.numberOfTickets += 1;
+      eventInCart.numberOfTickets = numberOfTickets;
     }
   }
 
   function changeQuantity(objectId, event) {
-    const qty = Number(event.target.value) ?? 0;
-    const productInCart = events.value.find(object => object.object.eventId === objectId);
+    const qty = Number(event.value) ?? 0;
+    const productInCart = events.value.find(object => object.object.id === objectId);
     if (!productInCart)
       return;
 
@@ -31,8 +34,12 @@ export const useCartStore = defineStore('cart', () => {
       productInCart.numberOfTickets = qty;
     }
     else {
-      events.value = events.value.filter(object => object.object.eventId !== objectId);
+      events.value = events.value.filter(object => object.object.id !== objectId);
     }
+  }
+
+  function saveBookings(bookingApprooval) {
+    activeBookings.value.push(bookingApprooval);
   }
   function clearCart() {
     events.value = [];
@@ -40,8 +47,10 @@ export const useCartStore = defineStore('cart', () => {
   return {
     events,
     getEvents,
+    getActiveBookings,
     addToCart,
     changeQuantity,
+    saveBookings,
     clearCart,
   };
 });

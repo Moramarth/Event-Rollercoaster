@@ -1,9 +1,16 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import DataView from 'primevue/dataview';
+import InputNumber from 'primevue/inputnumber';
+import Button from 'primevue/button';
+import { useRouter } from 'vue-router';
 import { useCartStore } from '../store/cartStore';
-import { generateTicket } from '../utils/generateTicket';
+import { bookTickets } from '../dataProviders/bookings';
 
+const router = useRouter();
 const cartStore = useCartStore();
+const layout = ref('list');
+
 const selectedEvents = computed(() => {
   return cartStore.getEvents;
 });
@@ -16,87 +23,112 @@ const totalSum = computed(() => {
 });
 
 async function buyTickets() {
-  if (!localStorage.getItem('tickets')) {
-    localStorage.setItem('tickets', JSON.stringify([]));
+  const booking = selectedEvents.value.reduce((acc, curr) => {
+    acc.tickets.push({ concertId: curr.object.id, ticketsCount: curr.numberOfTickets });
+    return acc;
+  }, { tickets: [] });
+  console.log(booking);
+  const response = await bookTickets(booking);
+  if (!response) {
+    console.log('error');
+    return;
   }
-  const my_tickets = JSON.parse(localStorage.getItem('tickets'));
-
-  for (const event of cartStore.getEvents) {
-    for (let i = 0; i < event.numberOfTickets; i++) {
-      my_tickets.push(await generateTicket(event.object));
-    }
-  }
-
-  localStorage.setItem('tickets', JSON.stringify(my_tickets));
+  console.log(response);
+  cartStore.saveBookings(response);
   cartStore.clearCart();
+  router.push({ name: 'orders-page' });
 }
 </script>
 
 <template>
   <h1>This is the Cart Page</h1>
-  <article>
-    <table>
-      <thead>
-        <tr>
-          <th>Event</th>
-          <th>Name</th>
-          <th>Quantity</th>
-          <th>Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="object in selectedEvents" :key="object.object.eventId">
-          <td>
-            <div class="img-wrapper">
-              <img :src="object.object.image" alt="event poster">
-            </div>
-          </td>
-          <td>
-            <p style="font-size: 1.25rem;">
-              {{ object.object.name }}
-            </p>
-            <p style="font-size: 0.75rem;">
-              Ticket price: {{ object.object.ticketPrice }}$
-            </p>
-          </td>
-          <td>
-            <input
-              type="number"
-              :value="object.numberOfTickets"
-              style="width: 5rem;"
-              @input="cartStore.changeQuantity(object.object.eventId, $event)"
-            >
-          </td>
-          <td class="price">
-            {{ object.object.ticketPrice * object.numberOfTickets }}$
-          </td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="3">
-            Total:
-          </td>
-          <td class="price">
-            {{ totalSum }}$
-          </td>
-        </tr>
-      </tfoot>
-    </table>
-    <div class="btn-container">
-      <button @click="buyTickets">
-        Buy Tickets
-      </button>
-      <button class="secondary" @click="cartStore.clearCart()">
-        Clear Cart
-      </button>
-    </div>
-  </article>
+  <DataView
+    :value="selectedEvents"
+    paginator
+    paginator-position="both"
+    :rows="5"
+    :rows-per-page-options="[5, 10, 20]"
+    :layout="layout"
+  >
+    <template #list="slotProps">
+      <table style="width:100%">
+        <thead>
+          <tr>
+            <th>
+              Event
+            </th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="object in slotProps.items" :key="object.object.eventId">
+            <td style="text-align: center;">
+              <img class="table-img" :src="object.object.banerUrl" alt="event poster">
+            </td>
+            <td>
+              <p style="font-size: 1.25rem;">
+                {{ object.object.name }}
+              </p>
+              <p style="font-size: 0.75rem;">
+                Ticket price: {{ object.object.ticketPrice }} BGN
+              </p>
+            </td>
+            <td>
+              <InputNumber
+                v-model="object.numberOfTickets"
+                :min="0"
+                :max="600"
+                input-id="horizontal-buttons"
+                show-buttons
+                button-layout="horizontal"
+                :step="1"
+                @input="cartStore.changeQuantity(object.object.id, $event)"
+              >
+                <template #incrementbuttonicon>
+                  <span class="pi pi-plus" />
+                </template>
+                <template #decrementbuttonicon>
+                  <span class="pi pi-minus" />
+                </template>
+              </InputNumber>
+            </td><td class="price">
+              {{ object.object.ticketPrice * object.numberOfTickets }} BGN
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3">
+              Total:
+            </td>
+            <td class="price">
+              {{ totalSum }} BGN
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </template>
+  </DataView>
+  <div class="btn-container">
+    <Button @click="buyTickets">
+      Buy Tickets
+    </Button>
+    <Button class="secondary" @click="cartStore.clearCart()">
+      Clear Cart
+    </Button>
+  </div>
 </template>
 
 <style scoped>
 .btn-container {
   display: flex;
   gap: 1rem
+}
+.table-img {
+ max-width: 100px;
+ aspect-ratio: 1/1;
+ border-radius: 50%;
 }
 </style>

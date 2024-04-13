@@ -1,17 +1,20 @@
 <script setup>
 import DataView from 'primevue/dataview';
 import DataViewLayoutOptions from 'primevue/dataviewlayoutoptions';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
-import { allEvents } from '../../../mockDataEvents';
+import { getEvents } from '../dataProviders/events';
 
-const array = ref(structuredClone(allEvents));
+const array = ref([]);
 const layout = ref('grid');
+
+onMounted(async () => {
+  array.value = await getEvents();
+});
 </script>
 
 <template>
-  This is the Events List page
   <DataView
     :value="array"
     paginator
@@ -26,32 +29,38 @@ const layout = ref('grid');
       </div>
     </template>
     <template #list="slotProps">
-      <table>
+      <table style="width: 100%;">
         <thead>
           <tr>
-            <th>ID</th>
+            <th />
             <th>Name</th>
             <th>Event Date</th>
-            <th>Description</th>
-            <th>Featured</th>
+            <th style="width: 50%;">
+              Description
+            </th>
             <th>Ticket Price</th>
             <th>Details</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr v-for="obj in slotProps.items" :key="obj.eventId">
-            <td>{{ obj.eventId }}</td>
-            <td>{{ obj.name }}</td>
-            <td>{{ obj.date }}</td>
-            <td>{{ obj.description }}</td>
-            <td>
-              {{ obj.featured?.join(', ') }}
+          <tr v-for="obj in slotProps.items" :key="obj.id">
+            <td style="text-align: center;">
+              <img class="table-img" :src="obj.banerUrl" alt="banner">
             </td>
-            <td>{{ obj.ticketPrice }}</td>
-            <td>
-              <router-link :to=" { name: 'event-details', params: { id: obj.eventId } }">
-                <Button label="Go to Details" />
+            <td style="text-align: center;">
+              {{ obj.name }}
+            </td>
+            <td style="text-align: center;">
+              {{ obj.startTime }}
+            </td>
+            <td>{{ obj.description }}</td>
+            <td style="text-align: center;">
+              {{ obj.ticketPrice }} BGN
+            </td>
+            <td style="text-align: center;">
+              <router-link :to=" { name: 'event-details', params: { id: obj.id } }">
+                <Button label="Details" />
               </router-link>
             </td>
           </tr>
@@ -62,25 +71,25 @@ const layout = ref('grid');
       <div class="my-grid">
         <Card
           v-for="obj in slotProps.items"
-          :key="obj.eventId"
+          :key="obj.id"
           class="card"
         >
           <template #header>
-            <img alt="obj image" src="">
+            <img alt="obj image" :src="obj.banerUrl">
           </template>
           <template #title>
             {{ obj.name }}
           </template>
           <template #subtitle>
-            {{ obj.date }}
+            {{ obj.startTime }}
           </template>
           <template #content>
             <p>{{ obj.description }}</p>
-            <p>{{ obj.featured?.join(', ') }}</p>
+            <p>{{ obj.ticketPrice }} BGN</p>
           </template>
           <template #footer>
-            <router-link :to=" { name: 'event-details', params: { id: obj.eventId } }">
-              <Button label="Go to Details" />
+            <router-link :to=" { name: 'event-details', params: { id: obj.id } }">
+              <Button label="Details" />
             </router-link>
           </template>
         </Card>
@@ -90,6 +99,9 @@ const layout = ref('grid');
 </template>
 
 <style scoped>
+.p-card {
+  background-color: var(--highlight-bg);
+}
 .my-grid {
   padding: 2rem;
   display: grid;
@@ -99,6 +111,16 @@ const layout = ref('grid');
 
 .card {
   overflow: hidden;
+}
+
+.card img {
+  width:100%
+}
+
+.table-img {
+ max-width: 75px;
+ aspect-ratio: 1/1;
+ border-radius: 50%;
 }
 @media screen and (min-width: 560px) {
   .my-grid {

@@ -1,30 +1,19 @@
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-const tickets = ref(JSON.parse(localStorage.getItem('tickets')));
-
-function removeTickets() {
-  localStorage.removeItem('tickets');
-  router.push({ name: 'home-page' });
-}
+const tickets = JSON.parse(localStorage.getItem('payed_orders'));
 </script>
 
 <template>
   My tickets page
-  <button @click="removeTickets">
+  {{ tickets }}
+  <button>
     Remove Tickets
   </button>
-
-  <article v-for="ticket in tickets" :key="ticket.id">
-    <img :src="ticket.img">
-
-    <p>{{ ticket.date }}</p>
-    <p>{{ ticket.eventName }}</p>
-  </article>
 </template>
 
-<style lang="scss" scoped>
-
+<style  scoped>
+.p-card {
+max-width: 75%;
+margin: 0.5rem auto;
+background-color: var(--highlight-bg)
+}
 </style>

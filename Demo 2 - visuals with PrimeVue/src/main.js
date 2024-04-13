@@ -2,7 +2,8 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import PrimeVue from 'primevue/config';
 import { router } from './router/router';
-import 'primevue/resources/themes/lara-light-green/theme.css';
+
+import 'primevue/resources/themes/lara-dark-green/theme.css';
 import 'primeicons/primeicons.css';
 import App from './App.vue';
 
