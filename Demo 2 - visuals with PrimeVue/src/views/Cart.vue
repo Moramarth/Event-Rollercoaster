@@ -6,6 +6,7 @@ import Button from 'primevue/button';
 import { useRouter } from 'vue-router';
 import { useCartStore } from '../store/cartStore';
 import { bookTickets } from '../dataProviders/bookings';
+import { CURRENCY } from '../utils/constants';
 
 const router = useRouter();
 const cartStore = useCartStore();
@@ -72,10 +73,11 @@ async function buyTickets() {
                 {{ object.object.name }}
               </p>
               <p style="font-size: 0.75rem;">
-                Ticket price: {{ object.object.ticketPrice }} BGN
+                Ticket price: {{ object.object.ticketPrice }} {{ CURRENCY }}
               </p>
             </td>
             <td>
+              <!-- TODO: Dynamic max -->
               <InputNumber
                 v-model="object.numberOfTickets"
                 :min="0"
@@ -94,7 +96,7 @@ async function buyTickets() {
                 </template>
               </InputNumber>
             </td><td class="price">
-              {{ object.object.ticketPrice * object.numberOfTickets }} BGN
+              {{ object.object.ticketPrice * object.numberOfTickets }} {{ CURRENCY }}
             </td>
           </tr>
         </tbody>
@@ -104,7 +106,7 @@ async function buyTickets() {
               Total:
             </td>
             <td class="price">
-              {{ totalSum }} BGN
+              {{ totalSum }} {{ CURRENCY }}
             </td>
           </tr>
         </tfoot>

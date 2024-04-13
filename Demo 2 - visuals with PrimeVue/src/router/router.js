@@ -7,6 +7,7 @@ import Cart from '../views/Cart.vue';
 import Orders from '../views/Orders.vue';
 import Tickets from '../views/Tickets.vue';
 
+// TODO: Login route
 const routes = [
   { path: '/', name: 'home-page', component: Home },
   { path: '/events', name: 'events-list', component: EventsList },

@@ -6,8 +6,10 @@ import Accordion from 'primevue/accordion';
 import AccordionTab from 'primevue/accordiontab';
 import { useCartStore } from '../store/cartStore';
 import { payTickets } from '../dataProviders/bookings';
+import { useTicketStore } from '../store/ticketStore';
 
 const cartStore = useCartStore();
+const ticketStore = useTicketStore();
 
 const activeBookings = computed(() => cartStore.getActiveBookings);
 
@@ -17,10 +19,10 @@ function buildBookingHeader(id) {
 
 async function payOrders(orderId) {
   const response = await payTickets(orderId);
-  console.log(response);
-  if (response) {
-    localStorage.setItem('payed_orders', JSON.stringify(response));
+  if (Object.keys(response).length > 0) {
+    ticketStore.storePayedTickets(response);
   }
+  // TODO: Handle errors
 }
 </script>
 

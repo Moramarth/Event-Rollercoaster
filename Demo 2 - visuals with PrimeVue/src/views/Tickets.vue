@@ -1,5 +1,14 @@
 <script setup>
-const tickets = JSON.parse(localStorage.getItem('payed_orders'));
+import { computed, onMounted } from 'vue';
+import { useTicketStore } from '../store/cartStore';
+
+// TODO: more testing
+const ticketStore = useTicketStore();
+const tickets = computed(() => ticketStore.getAllTickets);
+
+onMounted(
+  ticketStore.getStoredTickets(),
+);
 </script>
 
 <template>

@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router';
 import Button from 'primevue/button';
 import { getEventById } from '../dataProviders/events';
 import { useCartStore } from '../store/cartStore';
+import { CURRENCY } from '../utils/constants';
 
 const cartStore = useCartStore();
 const object = ref({});
@@ -47,7 +48,7 @@ async function getTicket(id, ticketsleft) {
           <div class="concert-image-container">
             <img :src="object.banerUrl" alt="Concert Image" class="concert-image">
             <div class="ticket-price">
-              {{ object.ticketPrice }} BGN
+              {{ object.ticketPrice }} {{ CURRENCY }}
             </div>
             <div class="sticker">
               {{ object.startTime }}

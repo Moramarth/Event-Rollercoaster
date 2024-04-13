@@ -5,6 +5,7 @@ import { onMounted, ref } from 'vue';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import { getEvents } from '../dataProviders/events';
+import { CURRENCY } from '../utils/constants';
 
 const array = ref([]);
 const layout = ref('grid');
@@ -56,7 +57,7 @@ onMounted(async () => {
             </td>
             <td>{{ obj.description }}</td>
             <td style="text-align: center;">
-              {{ obj.ticketPrice }} BGN
+              {{ obj.ticketPrice }} {{ CURRENCY }}
             </td>
             <td style="text-align: center;">
               <router-link :to=" { name: 'event-details', params: { id: obj.id } }">
@@ -85,7 +86,7 @@ onMounted(async () => {
           </template>
           <template #content>
             <p>{{ obj.description }}</p>
-            <p>{{ obj.ticketPrice }} BGN</p>
+            <p>{{ obj.ticketPrice }} {{ CURRENCY }}</p>
           </template>
           <template #footer>
             <router-link :to=" { name: 'event-details', params: { id: obj.id } }">

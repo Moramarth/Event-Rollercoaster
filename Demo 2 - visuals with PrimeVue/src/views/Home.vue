@@ -4,6 +4,7 @@ import Carousel from 'primevue/carousel';
 import Card from 'primevue/card';
 import { onMounted, ref } from 'vue';
 import { getUpcomingEvents } from '../dataProviders/events';
+import { CURRENCY } from '../utils/constants';
 
 const array = ref([]);
 
@@ -29,7 +30,7 @@ onMounted(async () => {
           {{ slotProps.data.name }}
         </template>
         <template #subtitle>
-          <p>{{ slotProps.data.ticketPrice }} BGN</p>
+          <p>{{ slotProps.data.ticketPrice }} {{ CURRENCY }}</p>
           <p>Starts at {{ slotProps.data.startTime }}</p>
         </template>
         <template #content>

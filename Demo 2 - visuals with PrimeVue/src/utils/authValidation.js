@@ -1,5 +1,8 @@
+import { useUsersStore } from '../store/userStore';
+
 function authHeaders() {
-  return { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJvZmZpY2VAZHNlLmJnIiwianRpIjoiNTg1NjQ3ODktNDBlNS00Yjk4LTkyMzQtOTc2ZjYzYjdlNWU1IiwiZXhwIjoxNzEzNjAxODg1LCJpc3MiOiJDb25jZXIuTWFuYWdlbWVudC5TeXN0ZW0uV2ViQXBpIiwiYXVkIjoiQ01TIn0.qY7IE_rUftz1KnzmMnaOXD8HXaJqU6xfJcCqeZLSRIE` };
+  const userStore = useUsersStore();
+  return { Authorization: `Bearer ${userStore.getAccessToken}` };
 }
 
 export { authHeaders };
