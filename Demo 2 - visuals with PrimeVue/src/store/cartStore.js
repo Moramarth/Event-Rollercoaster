@@ -9,14 +9,14 @@ export const useCartStore = defineStore('cart', () => {
   const getEvents = computed(() => events.value);
   const getActiveBookings = computed(() => activeBookings.value);
 
-  async function addToCart(selectedId, numberOfTickets, ticketsleft) {
+  async function addToCart(selectedId, numberOfTickets, ticketsLeft) {
     const eventInCart = events.value.find(object => object.object.id === selectedId);
     if (!eventInCart) {
       const newEvent = await getEventById(selectedId);
       events.value.push({
         object: structuredClone(newEvent),
         numberOfTickets,
-        ticketsleft,
+        ticketsLeft,
       });
     }
     else {
@@ -40,7 +40,23 @@ export const useCartStore = defineStore('cart', () => {
 
   function saveBookings(bookingApprooval) {
     activeBookings.value.push(bookingApprooval);
+    localStorage.setItem('savedBookings', JSON.stringify(activeBookings.value));
   }
+
+  function getSavedBookings() {
+    const bookings = JSON.parse(localStorage.getItem('savedBookings'));
+    if (!bookings) {
+      return;
+    }
+    activeBookings.value = bookings;
+  }
+
+  function removePayedBookings(bookingId) {
+    activeBookings.value = activeBookings.value.filter(object => object.booking.bookingId !== bookingId);
+    localStorage.setItem('savedBookings', JSON.stringify(activeBookings.value));
+    getSavedBookings();
+  }
+
   function clearCart() {
     events.value = [];
   }
@@ -51,6 +67,8 @@ export const useCartStore = defineStore('cart', () => {
     addToCart,
     changeQuantity,
     saveBookings,
+    getSavedBookings,
+    removePayedBookings,
     clearCart,
   };
 });

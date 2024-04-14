@@ -1,3 +1,4 @@
 const CURRENCY = 'BGN';
+const EVENTS_AT_HOME_PAGE = 5;
 
-export { CURRENCY };
+export { CURRENCY, EVENTS_AT_HOME_PAGE };

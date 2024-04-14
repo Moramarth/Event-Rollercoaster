@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import Password from 'primevue/password';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
+import Message from 'primevue/message';
 import { useRouter } from 'vue-router';
 import { loginUser } from '../dataProviders/auth';
 import { useUsersStore } from '../store/userStore';
@@ -19,7 +20,7 @@ const password = ref('');
 async function handleSubmit() {
   isLoading.value = true;
   const userData = {
-    email: emailInput.value,
+    username: emailInput.value,
     password: password.value,
   };
   const response = await loginUser(userData);
@@ -32,9 +33,9 @@ async function handleSubmit() {
     return;
   }
   //   TODO: Proper parameter from response
-  await userStore.storeLoginUser(response.access);
+  await userStore.storeLoginUser(response.token);
   isLoading.value = false;
-  if (userStore.authenticationStatus)
+  if (userStore.getAuthStatus)
     router.push({ name: 'home-page' });
 }
 </script>
@@ -43,10 +44,10 @@ async function handleSubmit() {
   <div class="wrapper">
     <Message :closable="false" severity="success">
       <h1>Login</h1>
-      <h3>Email:  </h3>
-      <h3>Password: </h3>
+      <h3>Email: office@dse.bg </h3>
+      <h3>Password: 123456</h3>
     </Message>
-    <form action="" method="post" @submit.prevent="handleSubmit">
+    <form action="" method="post">
       <span class="p-float-label">
         <InputText id="email" v-model="emailInput" />
         <label for="email">Email</label>
@@ -65,10 +66,7 @@ async function handleSubmit() {
       <div v-if="errorLogin" class="error-msg">
         Invalid Email or Password! Access denied!
       </div>
-      <Button v-else class="btn btn-primary">
-        <LoadSpinner v-if="isLoading" />
-        <span v-else>Login</span>
-      </Button>
+      <Button v-else label="Login" @click="handleSubmit" />
     </form>
   </div>
 </template>
@@ -79,6 +77,7 @@ form {
   flex-direction: column;
   align-items: flex-start;
   gap: 2rem;
+  padding: 2rem;
 }
 
 .wrapper {

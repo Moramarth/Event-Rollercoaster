@@ -33,9 +33,9 @@ onMounted(() => {
 function visualiseDataImage(imageStr) {
   return `data:image/*;base64,${imageStr}`;
 }
-async function getTicket(id, ticketsleft) {
+async function getTicket(id, ticketsLeft) {
   isLoading.value = true;
-  await cartStore.addToCart(id, numberOfTickets.value, ticketsleft);
+  await cartStore.addToCart(id, numberOfTickets.value, ticketsLeft);
   isLoading.value = false;
 }
 </script>

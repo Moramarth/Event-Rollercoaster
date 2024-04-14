@@ -4,10 +4,12 @@ import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Accordion from 'primevue/accordion';
 import AccordionTab from 'primevue/accordiontab';
+import { useRouter } from 'vue-router';
 import { useCartStore } from '../store/cartStore';
 import { payTickets } from '../dataProviders/bookings';
 import { useTicketStore } from '../store/ticketStore';
 
+const router = useRouter();
 const cartStore = useCartStore();
 const ticketStore = useTicketStore();
 
@@ -21,6 +23,9 @@ async function payOrders(orderId) {
   const response = await payTickets(orderId);
   if (Object.keys(response).length > 0) {
     ticketStore.storePayedTickets(response);
+    console.log(orderId);
+    cartStore.removePayedBookings(orderId);
+    router.push({ name: 'tickets-page' });
   }
   // TODO: Handle errors
 }

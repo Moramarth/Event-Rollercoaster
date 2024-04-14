@@ -1,4 +1,5 @@
 import { authHeaders } from '../utils/authValidation';
+import { EVENTS_AT_HOME_PAGE } from '../utils/constants';
 import { axiosInstance } from './axiosInstance';
 
 async function getEvents() {
@@ -28,7 +29,7 @@ async function getEventById(id) {
 }
 async function getUpcomingEvents() {
   try {
-    const response = await axiosInstance.get('Concert/Upcoming', {
+    const response = await axiosInstance.get(`Concert/Upcoming/${EVENTS_AT_HOME_PAGE}`, {
       headers: authHeaders(),
     });
     return response.data;

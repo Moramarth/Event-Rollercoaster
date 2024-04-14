@@ -1,14 +1,10 @@
 <script setup>
-import { computed, onMounted } from 'vue';
-import { useTicketStore } from '../store/cartStore';
+import { computed } from 'vue';
+import { useTicketStore } from '../store/ticketStore';
 
 // TODO: more testing
 const ticketStore = useTicketStore();
 const tickets = computed(() => ticketStore.getAllTickets);
-
-onMounted(
-  ticketStore.getStoredTickets(),
-);
 </script>
 
 <template>

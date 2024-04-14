@@ -14,7 +14,7 @@ export const useTicketStore = defineStore('tickets', () => {
 
   function getStoredTickets() {
     const storedTickets = JSON.parse(localStorage.getItem('tickets'));
-    if (!tickets)
+    if (!storedTickets)
       return;
     tickets.value = storedTickets;
   }
