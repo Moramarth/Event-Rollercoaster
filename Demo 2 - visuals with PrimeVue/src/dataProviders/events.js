@@ -36,6 +36,7 @@ async function getUpcomingEvents() {
   }
   catch (error) {
     console.error('errorFetchingMsg', error);
+
     return [];
   }
 }

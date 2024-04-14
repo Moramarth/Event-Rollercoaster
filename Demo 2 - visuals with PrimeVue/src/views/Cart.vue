@@ -28,14 +28,13 @@ async function buyTickets() {
     acc.tickets.push({ concertId: curr.object.id, ticketsCount: curr.numberOfTickets });
     return acc;
   }, { tickets: [] });
-  console.log(booking);
+
   const response = await bookTickets(booking);
   if (!response) {
     console.log('error');
     return;
   }
-  console.log(response);
-  cartStore.saveBookings(response);
+
   cartStore.clearCart();
   router.push({ name: 'orders-page' });
 }

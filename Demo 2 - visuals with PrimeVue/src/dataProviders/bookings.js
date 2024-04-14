@@ -13,6 +13,18 @@ async function bookTickets(bookingData) {
     return '';
   }
 }
+async function getMyBookings() {
+  try {
+    const response = await axiosInstance.get('Booking', {
+      headers: authHeaders(),
+    });
+    return response.data;
+  }
+  catch (error) {
+    console.error('errorFetchingMsg', error);
+    return '';
+  }
+}
 
 async function payTickets(bookingId) {
   try {
@@ -27,4 +39,17 @@ async function payTickets(bookingId) {
   }
 }
 
-export { bookTickets, payTickets };
+async function getMyPayments() {
+  try {
+    const response = await axiosInstance.get('Booking/Payment', {
+      headers: authHeaders(),
+    });
+    return response.data;
+  }
+  catch (error) {
+    console.error('errorFetchingMsg', error);
+    return {};
+  }
+}
+
+export { bookTickets, payTickets, getMyBookings, getMyPayments };

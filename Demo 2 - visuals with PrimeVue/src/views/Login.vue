@@ -32,8 +32,8 @@ async function handleSubmit() {
     isLoading.value = false;
     return;
   }
-  //   TODO: Proper parameter from response
-  await userStore.storeLoginUser(response.token);
+
+  userStore.storeLoginUser(response.token);
   isLoading.value = false;
   if (userStore.getAuthStatus)
     router.push({ name: 'home-page' });

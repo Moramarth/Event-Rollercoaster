@@ -1,19 +1,21 @@
 <script setup>
-import { computed } from 'vue';
+import { onMounted, ref } from 'vue';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Accordion from 'primevue/accordion';
 import AccordionTab from 'primevue/accordiontab';
 import { useRouter } from 'vue-router';
-import { useCartStore } from '../store/cartStore';
-import { payTickets } from '../dataProviders/bookings';
-import { useTicketStore } from '../store/ticketStore';
+import { getMyBookings, payTickets } from '../dataProviders/bookings';
+
+import { CURRENCY } from '../utils/constants';
 
 const router = useRouter();
-const cartStore = useCartStore();
-const ticketStore = useTicketStore();
 
-const activeBookings = computed(() => cartStore.getActiveBookings);
+const activeBookings = ref({});
+
+onMounted(async () => {
+  activeBookings.value = await getMyBookings();
+});
 
 function buildBookingHeader(id) {
   return `Order Number ${id}`;
@@ -22,29 +24,32 @@ function buildBookingHeader(id) {
 async function payOrders(orderId) {
   const response = await payTickets(orderId);
   if (Object.keys(response).length > 0) {
-    ticketStore.storePayedTickets(response);
-    console.log(orderId);
-    cartStore.removePayedBookings(orderId);
     router.push({ name: 'tickets-page' });
   }
-  // TODO: Handle errors
 }
 </script>
 
 <template>
   <h1>This is the orders page</h1>
   <Accordion :multiple="true" :active-index="0">
-    <AccordionTab v-for="tab in activeBookings" :key="tab.bookingId" :header="buildBookingHeader(tab.booking.bookingId)">
-      <Button label="Pay Tickets" @click="payOrders(tab.booking.bookingId)" />
-      <Card v-for="order in tab.booking.orders" :key="order.concertName">
-        <template #content>
-          <p>{{ order.concertName }}</p>
-          <p>{{ order.startDate }}</p>
-          <p>{{ order.companyName }}</p>
-          <p>{{ order.hallName }}</p>
-          <p>{{ order.ticketCount }}</p>
-          <p>{{ order.ticketPrice }}</p>
+    <AccordionTab v-for="tab in activeBookings.bookings" :key="tab.bookingId" :header="buildBookingHeader(tab.bookingId)">
+      <Button label="Pay Tickets" @click="payOrders(tab.bookingId)" />
+      <Card v-for="concert in tab.orders" :key="concert.concertName">
+        <template #header>
+          <div class="image-container">
+            <img :src="concert.concertImageUrl" alt="">
+          </div>
         </template>
+        <template #title />
+        <template #subtitle />
+        <template #content>
+          <h2>{{ concert.concertName }}</h2>
+          <h3>Organiser: {{ concert.companyName }} -  {{ concert.hallName }}</h3>
+          <p>Starts at {{ concert.startDate }}</p>
+          <p>Number of tickets {{ concert.ticketsCount }}</p>
+          <p>Ticket Price: {{ concert.ticketPrice }} {{ CURRENCY }}</p>
+        </template>
+        <template #footer />
       </Card>
     </AccordionTab>
   </Accordion>
@@ -52,8 +57,34 @@ async function payOrders(orderId) {
 
 <style  scoped>
 .p-card {
-max-width: 75%;
-margin: 0.5rem auto;
-background-color: var(--highlight-bg)
+  display: flex;
+  padding-left: 3rem;
+  gap: 3rem;
+  align-items: center;
+  max-width: 75%;
+  margin: 0.5rem auto;
+  background-color: var(--highlight-bg)
+}
+.image-container {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  align-items: center;
+  object-fit:fill;
+}
+.image-container > img {
+  width: 220px;
+  object-fit:contain;
+}
+
+@media (max-width:800px) {
+  .p-card {
+    flex-direction: column;
+    padding: 0;
+  }
+  .image-container > img {
+  width: 100%;
+  object-fit:contain;
+}
 }
 </style>
