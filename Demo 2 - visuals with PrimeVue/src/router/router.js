@@ -10,13 +10,13 @@ import Login from '../views/Login.vue';
 import { validateUser } from '../utils/authValidation';
 
 const routes = [
-  { path: '/', name: 'home-page', component: Home, beforeEnter: validateUser },
+  { path: '/', name: 'home-page', component: Home },
   { path: '/login', name: 'login-page', component: Login },
-  { path: '/events', name: 'events-list', component: EventsList, beforeEnter: validateUser },
-  { path: '/events/:id', name: 'event-details', component: EventDetails, beforeEnter: validateUser },
-  { path: '/cart', name: 'cart-page', component: Cart, beforeEnter: validateUser },
-  { path: '/orders', name: 'orders-page', component: Orders, beforeEnter: validateUser },
-  { path: '/tickets', name: 'tickets-page', component: Tickets, beforeEnter: validateUser },
+  { path: '/events', name: 'events-list', component: EventsList },
+  { path: '/events/:id', name: 'event-details', component: EventDetails },
+  { path: '/cart', name: 'cart-page', component: Cart },
+  { path: '/orders', name: 'orders-page', component: Orders },
+  { path: '/tickets', name: 'tickets-page', component: Tickets },
   { path: '/:pathMatch(.*)*', name: 'page-not-found', component: NotFound },
 ];
 

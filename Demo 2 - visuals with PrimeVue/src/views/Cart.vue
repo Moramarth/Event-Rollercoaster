@@ -41,7 +41,9 @@ async function buyTickets() {
 </script>
 
 <template>
-  <h1>This is the Cart Page</h1>
+  <h1 style="text-align: center; color: var(--primary-color);">
+    My Cart Page
+  </h1>
   <DataView
     :value="selectedEvents"
     paginator
@@ -52,38 +54,27 @@ async function buyTickets() {
   >
     <template #list="slotProps">
       <table style="width:100%">
-        <thead>
-          <tr>
-            <th>
-              Event
-            </th>
-            <th>Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-          </tr>
-        </thead>
         <tbody>
           <tr v-for="object in slotProps.items" :key="object.object.eventId">
-            <td style="text-align: center;">
+            <td style="padding: 15px;">
               <img class="table-img" :src="object.object.banerUrl" alt="event poster">
             </td>
             <td>
-              <p style="font-size: 1.25rem;">
+              <p style="font-size: 1.5rem;">
                 {{ object.object.name }}
               </p>
-              <p style="font-size: 0.75rem;">
-                Ticket price: {{ object.object.ticketPrice }} {{ CURRENCY }}
+              <p style="font-size: 0.8rem;">
+                Price: {{ object.object.ticketPrice }} {{ CURRENCY }}
               </p>
             </td>
-            <td>
-              <!-- TODO: Dynamic max -->
+            <td style="text-align: center;">
               <InputNumber
                 v-model="object.numberOfTickets"
+                style="height:60px;"
                 :min="0"
                 :max="600"
                 input-id="horizontal-buttons"
                 show-buttons
-                button-layout="horizontal"
                 :step="1"
                 @input="cartStore.changeQuantity(object.object.id, $event)"
               >
@@ -101,7 +92,7 @@ async function buyTickets() {
         </tbody>
         <tfoot>
           <tr>
-            <td colspan="3">
+            <td style="text-align: end; padding-right: 20px; font-size: larger;" colspan="3">
               Total:
             </td>
             <td class="price">
@@ -114,7 +105,7 @@ async function buyTickets() {
   </DataView>
   <div class="btn-container">
     <Button @click="buyTickets">
-      Buy Tickets
+      Make order
     </Button>
     <Button class="secondary" @click="cartStore.clearCart()">
       Clear Cart
@@ -123,13 +114,26 @@ async function buyTickets() {
 </template>
 
 <style scoped>
+table {
+  width: 100%;
+  padding: 0 2rem;
+}
+
 .btn-container {
   display: flex;
-  gap: 1rem
+  gap: 2rem;
+  justify-content: center;
+  margin-top: 1rem;
 }
+
 .table-img {
- max-width: 100px;
- aspect-ratio: 1/1;
- border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.price {
+  text-align: end;
 }
 </style>

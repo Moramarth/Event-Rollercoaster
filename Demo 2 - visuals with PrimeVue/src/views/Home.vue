@@ -24,43 +24,49 @@ onMounted(async () => {
     <template #item="slotProps">
       <Card>
         <template #header>
-          <img class="table-img" :src="slotProps.data.banerUrl" alt="banner">
+          <div class="image-container">
+            <img class="table-img" :src="slotProps.data.banerUrl" alt="banner">
+          </div>
         </template>
         <template #title>
-          {{ slotProps.data.name }}
+          <h3 style="text-align: center; color: var(--primary-color);">
+            {{ slotProps.data.name }} - {{ slotProps.data.startTime }}
+          </h3>
         </template>
         <template #subtitle>
-          <p>{{ slotProps.data.ticketPrice }} {{ CURRENCY }}</p>
-          <p>Starts at {{ slotProps.data.startTime }}</p>
+          <p style="text-align: center;">
+            {{ slotProps.data.ticketPrice }} {{ CURRENCY }}
+          </p>
+          <p style="text-align: center;">
+            {{ slotProps.data.companyName }}
+          </p>
         </template>
         <template #content>
-          <h2 />
-          {{ slotProps.data.description }}
-        </template>
-        <template #footer>
-          <p>{{ slotProps.data.companyName }}</p>
-          <p>
+          <p style="text-align: center;">
+            {{ slotProps.data.description }}
+          </p>
+          <p style="text-align: center;">
             <router-link :to=" { name: 'event-details', params: { id: slotProps.data.id } }">
               <Button label="Details" />
             </router-link>
           </p>
         </template>
+        <template #footer />
       </Card>
     </template>
   </Carousel>
 </template>
 
 <style scoped>
-.p-card {
-  display: flex;
-  padding: 20px;
-  height: 500px;
-  font-size: 1.2rem;
+.image-container {
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
 }
 
 .table-img {
- height: 100%;
- width: auto;
- border-radius: 1rem;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>

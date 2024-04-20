@@ -12,8 +12,8 @@ const payments = ref({});
 onMounted(async () => {
   payments.value = await getMyPayments();
   const color = {
-    light: getComputedStyle(document.documentElement).getPropertyValue('--primary-color-text'),
-    dark: getComputedStyle(document.documentElement).getPropertyValue('--primary-color'),
+    light: getComputedStyle(document.documentElement).getPropertyValue('--primary-50'),
+    dark: getComputedStyle(document.documentElement).getPropertyValue('--primary-900'),
   };
 
   payments.value.tickets.forEach((element) => {

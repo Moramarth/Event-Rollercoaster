@@ -43,7 +43,7 @@ async function handleSubmit() {
 <template>
   <div class="wrapper">
     <Message :closable="false" severity="success">
-      <h1>Login</h1>
+      <h1>Test login information</h1>
       <h3>Email: office@dse.bg </h3>
       <h3>Password: 123456</h3>
     </Message>
@@ -78,6 +78,10 @@ form {
   align-items: flex-start;
   gap: 2rem;
   padding: 2rem;
+}
+
+#email{
+  width: 273px;
 }
 
 .wrapper {

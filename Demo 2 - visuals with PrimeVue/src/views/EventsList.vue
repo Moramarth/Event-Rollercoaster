@@ -20,8 +20,8 @@ onMounted(async () => {
     :value="array"
     paginator
     paginator-position="both"
-    :rows="5"
-    :rows-per-page-options="[5, 10, 20]"
+    :rows="3"
+    :rows-per-page-options="[3, 6, 12]"
     :layout="layout"
   >
     <template #header>
@@ -30,7 +30,7 @@ onMounted(async () => {
       </div>
     </template>
     <template #list="slotProps">
-      <table style="width: 100%;">
+      <table style="width: 100%; padding: 1rem;">
         <thead>
           <tr>
             <th />
@@ -49,14 +49,14 @@ onMounted(async () => {
             <td style="text-align: center;">
               <img class="table-img" :src="obj.banerUrl" alt="banner">
             </td>
-            <td style="text-align: center;">
+            <td style="text-align: center; color: var(--primary-color); width: 20%;">
               {{ obj.name }}
             </td>
-            <td style="text-align: center;">
+            <td style="text-align: center; color: var(--primary-color); width: 10%;">
               {{ obj.startTime }}
             </td>
             <td>{{ obj.description }}</td>
-            <td style="text-align: center;">
+            <td style="text-align: center; color: var(--primary-color); width: 20%;">
               {{ obj.ticketPrice }} {{ CURRENCY }}
             </td>
             <td style="text-align: center;">
@@ -101,8 +101,18 @@ onMounted(async () => {
 
 <style scoped>
 .p-card {
+  display: flex ;
+  flex-direction: column;
   background-color: var(--highlight-bg);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.5s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 }
+
 .my-grid {
   padding: 2rem;
   display: grid;
@@ -110,19 +120,31 @@ onMounted(async () => {
   gap: 3rem;
 }
 
-.card {
-  overflow: hidden;
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0.5rem;
+  transition: transform 0.5s;
 }
 
-.card img {
-  width:100%
+.card img:hover {
+  transform: scale(1.1);
+}
+
+.card img:active {
+  transform: scale(1.05);
 }
 
 .table-img {
- max-width: 75px;
- aspect-ratio: 1/1;
- border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
 }
+
 @media screen and (min-width: 560px) {
   .my-grid {
     --my-grid-cols: 1;

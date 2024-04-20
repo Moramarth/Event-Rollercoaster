@@ -30,7 +30,9 @@ async function payOrders(orderId) {
 </script>
 
 <template>
-  <h1>This is the orders page</h1>
+  <h1 style="text-align: center; color: var(--primary-color);">
+    PAYMENT PAGE
+  </h1>
   <Accordion :multiple="true" :active-index="0">
     <AccordionTab v-for="tab in activeBookings.bookings" :key="tab.bookingId" :header="buildBookingHeader(tab.bookingId)">
       <Button label="Pay Tickets" @click="payOrders(tab.bookingId)" />
@@ -44,9 +46,9 @@ async function payOrders(orderId) {
         <template #subtitle />
         <template #content>
           <h2>{{ concert.concertName }}</h2>
-          <h3>Organiser: {{ concert.companyName }} -  {{ concert.hallName }}</h3>
-          <p>Starts at {{ concert.startDate }}</p>
-          <p>Number of tickets {{ concert.ticketsCount }}</p>
+          <h4>Organiser: {{ concert.companyName }} - {{ concert.hallName }}</h4>
+          <p>{{ concert.startDate }}</p>
+          <p>Number of tickets: {{ concert.ticketsCount }}</p>
           <p>Ticket Price: {{ concert.ticketPrice }} {{ CURRENCY }}</p>
         </template>
         <template #footer />
@@ -63,18 +65,33 @@ async function payOrders(orderId) {
   align-items: center;
   max-width: 75%;
   margin: 0.5rem auto;
-  background-color: var(--highlight-bg)
+  background-color: var(--highlight-bg);
 }
 .image-container {
-  display: flex;
-  flex-direction: row;
-  gap: 15px;
-  align-items: center;
-  object-fit:fill;
+  width: 300px;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 50%;
+  padding: 1rem;
 }
 .image-container > img {
-  width: 220px;
-  object-fit:contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  padding-bottom: 1rem;
+}
+
+h4 {
+  font-size: 1rem;
+  color: var(--primary-color);
+  padding-bottom: 0.5rem;
+  font-style: italic;
 }
 
 @media (max-width:800px) {
